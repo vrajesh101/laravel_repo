@@ -24,7 +24,6 @@
       </div>
       <div class="modal-body">
         <form action="adduser" method="POST" id="adduser">
-          <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 
           <div class="mb-2">
@@ -71,7 +70,6 @@
       <div class="modal-body">
         <form action="edituser" method="POST"  id="edituser">
         @method('PUT')
-          <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <input type="hidden" id="editid" name="id" value="">
 
           <div class="mb-2">
@@ -125,11 +123,20 @@
 </table>
 @endsection
 
-@push("scripts")
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-@endpush
 @push('scripts')
 <script type="text/javascript" src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+@endpush
+
+@push("scripts")
+  <script type="text/javascript">
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script>
 @endpush
 
 @push('scripts')
@@ -167,13 +174,13 @@
         }
       ]
     });
+  
     $(document).on("click", "[name='delete']", function(e) {
       const id = $(this).parent().attr("id");
       $.ajax({
         type: "DELETE",
         url: "{{route('deleteuser')}}",
         data: {
-          "_token": "{{ csrf_token() }}",
           "id": id
         },
         success: function(data) {
@@ -184,11 +191,11 @@
 
     $(document).on("click", "[name='edit']", function(e) {
       const id = $(this).parent().attr("id");
+       const baseUrl = window.location.origin; 
       $.ajax({
-        type: "PUT",
-        url: "{{route('getuserbyid')}}",
+        type: "GET",
+        url: `${baseUrl}/userbyid/${id}`,
         data: {
-          "_token": "{{ csrf_token() }}",
           "id": id
         },
         success: function(data) {
@@ -237,7 +244,6 @@
       type: "POST",
       url: "{{route('adduser')}}",
       data: {
-        "_token": "{{ csrf_token() }}",
         "name": $("#addname").val(),
         "age": $("#addage").val(),
         "email": $("#addemail").val(),
@@ -265,13 +271,16 @@
     })
   })
     $("#edituser").on("submit", function(e) {
+      const baseUrl=window.location.origin;
+      const id = $("#editid").val();
+      console.log(id);
+      
     e.preventDefault();
     $.ajax({
       type: "PUT",
-      url: "{{route('edit')}}",
+      url: `${baseUrl}/edituser/${id}`,
       data: {
-        "_token": "{{ csrf_token() }}",
-        "id":$("#editid").val(),
+       
         "name": $("#editname").val(),
         "age": $("#editage").val(),
         "email": $("#editemail").val(),

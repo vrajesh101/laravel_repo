@@ -6,6 +6,6 @@
                     <a href="/page3" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Page 3</span></a>
                     <a href="/page4" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Page 4</span></a>
                     <a href="/page5" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Page 5</span></a>
-
+                    <a href="/addstudent" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Add Student</span></a>
                 </div>
             </div>

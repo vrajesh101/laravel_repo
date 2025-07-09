@@ -43,10 +43,16 @@ class UserController extends Controller
     public function addUser(Request $request)
     {
         $request->validate([
-            "name" => "required",
-            "email" => "required",
+            "name" => "required|min:3|max:10",
+            "email" => "required|email",
             "age" => "required",
             "contactno" => "required"
+        ],[
+            "name.required"=>"name can not be empty",
+            "name.min"=>"name atleast  should be 3 character",
+            "name.max"=>"name maximum should be 10 ",
+            "email.email"=>"this email is not valid"
+            
         ]);
 
         User::create([
@@ -55,35 +61,30 @@ class UserController extends Controller
             "age" => $request->age,
             "contactno" => $request->contactno
         ]);
-
-       
     }
 
     public function getUserById(Request $request)
     {
 
-        $user = User::find($request->id);
-
+        $user = User::find($request->route()->parameter("id"));
         return response($user);
     }
 
     public function editUser(Request $request)
-    {   
-         $request->validate([
-            "name" => "required",
-            "email" => "required",
+    {
+        $request->validate([
+            "name" => "required|min:3|max:10",
+            "email" => "required|email",
             "age" => "required",
             "contactno" => "required"
         ]);
 
-        $existuser = User::find($request->id);
+        $existuser = User::find($request->route()->parameter("id"));
         $existuser->name = $request->name;
         $existuser->age = $request->age;
         $existuser->email = $request->email;
         $existuser->contactno = $request->contactno;
 
         $existuser->save();
-
-        
     }
 }
