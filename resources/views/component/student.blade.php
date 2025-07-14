@@ -69,6 +69,7 @@
             type: "POST",
             url: "{{route('add-student')}}",
             data: {
+
                 "_token":"{{ csrf_token() }}",
                 "name": $("#name").val(),
                 "subject": selectedSubject.join(","),

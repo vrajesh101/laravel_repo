@@ -4,32 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\userinfo;
+use App\Rules\Uppercase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\Validate;
 use Yajra\DataTables\Facades\DataTables;
+use App\Rules\Number;
 
 class UserController extends Controller
 {
-
-
     public function getUser(Request $request)
     {
         if ($request->ajax()) {
 
-            $data = User::all();
+            $userQuery = User::select('*');
+            if ($request->age) {
+                $age = explode("-", $request->age);
 
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
+                $userQuery->whereBetween("age", [(int)$age[0],(int)$age[1]]);
+            }
 
-                    $button = '<div id=' . $row->id . '><button name="edit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edituserModal">Edit</button>
-                               <button name="delete"  class="btn btn-danger btn-sm">Delete</button></div>';
-
-                    return $button;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+            return Datatables::of($userQuery)->make(true);
         }
 
         return View('component.user');
@@ -43,16 +38,15 @@ class UserController extends Controller
     public function addUser(Request $request)
     {
         $request->validate([
-            "name" => "required|min:3|max:10",
+            "name" => ["required", "min:3", "max:30", new Uppercase()],
             "email" => "required|email",
-            "age" => "required",
+            "age" => ["required", new Number()],
             "contactno" => "required"
-        ],[
-            "name.required"=>"name can not be empty",
-            "name.min"=>"name atleast  should be 3 character",
-            "name.max"=>"name maximum should be 10 ",
-            "email.email"=>"this email is not valid"
-            
+        ], [
+            "name.required" => "name can not be empty",
+            "name.min" => "name atleast  should be 3 character",
+            "name.max" => "name maximum should be 30 ",
+            "email.email" => "this email is not valid"
         ]);
 
         User::create([
@@ -73,9 +67,9 @@ class UserController extends Controller
     public function editUser(Request $request)
     {
         $request->validate([
-            "name" => "required|min:3|max:10",
+            "name" => ["required", "min:3", "max:30"],
             "email" => "required|email",
-            "age" => "required",
+            "age" => ["required", new Number()],
             "contactno" => "required"
         ]);
 

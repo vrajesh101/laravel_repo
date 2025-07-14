@@ -56,10 +56,6 @@
     </div>
   </div>
 </div>
-
-
-
-
 <div class="modal fade" id="edituserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -68,8 +64,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="edituser" method="POST"  id="edituser">
-        @method('PUT')
+        <form action="edituser" method="POST" id="edituser">
+          @method('PUT')
           <input type="hidden" id="editid" name="id" value="">
 
           <div class="mb-2">
@@ -104,7 +100,21 @@
   </div>
 </div>
 
+<div class="d-flex">
+  <label>Age</label>
+  <select class="form-control w-25" id="age">
+    <option value="">Select Age</option>
+    <option value="10-30">10-30</option>
+    <option value="31-40">31-40</option>
+    <option value="41-50">41-50</option>
+    <option value="51-60">51-60</option>
+    <option value="61-70">61-70</option>
+    <option value="71-80">71-80</option>
+    <option value="81-90">81-90</option>
+    <option value="91-100">91-100</option>
 
+  </select>
+</div>
 <table id="user" class="table table-bordered table-striped">
   <thead>
     <tr>
@@ -113,8 +123,7 @@
       <th>Email</th>
       <th>age</th>
       <th>Contact No</th>
-      <th>Actions</th>
-
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -128,15 +137,15 @@
 @endpush
 
 @push("scripts")
-  <script type="text/javascript">
-        $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-        });
-    </script>
+<script type="text/javascript">
+  $(function() {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+  });
+</script>
 @endpush
 
 @push('scripts')
@@ -145,7 +154,12 @@
     $("#user").DataTable({
       "processing": true,
       "serverSide": true,
-      "ajax": "{{ route('userlist') }}",
+      "ajax": {
+        "url": "{{ route('userlist',['usertype'=>'admin']) }}",
+        "data": function(d) {
+          d.age = $('#age').val();
+        }
+      },
       "columns": [{
           data: 'id',
           name: 'id'
@@ -164,22 +178,28 @@
         },
         {
           data: 'contactno',
-          name: 'contactno'
+          name: 'contactno',
+          render: function(contactno, obj1, obj2) {
+            return contactno;
+          }
         },
         {
-          data: 'action',
-          name: 'action',
+          data: null,
+          name: null,
           orderable: false,
-          searchable: false
+          searchable: false,
+          render: function(row) {
+            return '<div id=' + row.id + '><button name="edit" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#edituserModal">Edit</button><button name="delete"  class="btn btn-danger btn-sm">Delete</button></div>'
+          }
         }
       ]
     });
-  
+
     $(document).on("click", "[name='delete']", function(e) {
       const id = $(this).parent().attr("id");
       $.ajax({
         type: "DELETE",
-        url: "{{route('deleteuser')}}",
+        url: "{{route('deleteuser',['usertype'=>'admin'])}}",
         data: {
           "id": id
         },
@@ -191,10 +211,10 @@
 
     $(document).on("click", "[name='edit']", function(e) {
       const id = $(this).parent().attr("id");
-       const baseUrl = window.location.origin; 
+      const baseUrl = window.location.origin;
       $.ajax({
         type: "GET",
-        url: `${baseUrl}/userbyid/${id}`,
+        url: `${baseUrl}/users/userbyid/${id}?usertype=admin`,
         data: {
           "id": id
         },
@@ -213,6 +233,11 @@
 
 
     })
+    $("#age").on("change", function() {
+      const val = $("#age").val();
+      const baseUrl = window.location.origin;
+      $("#user").DataTable().ajax.reload();
+    })
 
   });
   $('#adduserModal').on('hidden.bs.modal', function(e) {
@@ -227,22 +252,22 @@
       .val('')
       .end();
   })
- $("#adduserModal").on('hide.bs.modal', function(){
-      $("#addnameerror").text("");
-        
-      
-          $("#addemailerror").text("");
-        
-      
-          $("#addageerror").text("");
-        
-          $("#addcontactnoerror").text("");
+  $("#adduserModal").on('hide.bs.modal', function() {
+    $("#addnameerror").text("");
+
+
+    $("#addemailerror").text("");
+
+
+    $("#addageerror").text("");
+
+    $("#addcontactnoerror").text("");
   });
   $("#adduser").on("submit", function(e) {
     e.preventDefault();
     $.ajax({
       type: "POST",
-      url: "{{route('adduser')}}",
+      url: "{{route('adduser',['usertype'=>'admin'])}}",
       data: {
         "name": $("#addname").val(),
         "age": $("#addage").val(),
@@ -270,17 +295,17 @@
       }
     })
   })
-    $("#edituser").on("submit", function(e) {
-      const baseUrl=window.location.origin;
-      const id = $("#editid").val();
-      console.log(id);
-      
+  $("#edituser").on("submit", function(e) {
+    const baseUrl = window.location.origin;
+    const id = $("#editid").val();
+    console.log(id);
+
     e.preventDefault();
     $.ajax({
       type: "PUT",
-      url: `${baseUrl}/edituser/${id}`,
+      url: `${baseUrl}/users/edituser/${id}?usertype=admin`,
       data: {
-       
+
         "name": $("#editname").val(),
         "age": $("#editage").val(),
         "email": $("#editemail").val(),
@@ -311,17 +336,18 @@
 
 
 
- $("#edituserModal").on('hide.bs.modal', function(){
+    $("#edituserModal").on('hide.bs.modal', function() {
       $("#editnameerror").text("");
-        
-      
-          $("#editemailerror").text("");
-        
-      
-          $("#editageerror").text("");
-        
-          $("#editcontactnoerror").text("");
-  });
+
+
+      $("#editemailerror").text("");
+
+
+      $("#editageerror").text("");
+
+      $("#editcontactnoerror").text("");
+    });
+
 
 
   })
