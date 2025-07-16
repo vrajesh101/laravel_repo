@@ -34,3 +34,6 @@ Route::controller(UserController::class)->prefix("users")->group(function () {
 
 Route::get("one-to-one",[RelationshipsController::class,"Onetoone"]);
 Route::get("one-to-many",[RelationshipsController::class,"OnetoMany"]);
+Route::get("many-to-one",[RelationshipsController::class,"Manytoone"]);
+Route::get("many-to-many",[RelationshipsController::class,"ManytoMany"]);
+

@@ -11,14 +11,20 @@ class Masters extends Model
     use HasFactory;
 
 
- public $timestamps=false;
+    public $timestamps = false;
 
-   function Onetoonechild(){
-        return $this->hasOne("App\Models\Onetoone","master_id");
+    function Onetoonechild()
+    {
+        return $this->hasOne("App\Models\Onetoone", "master_id");
     }
 
-    function Onetomanychild(){
-        return $this->hasMany("App\Models\Onetomanies","master_id");
+    function Onetomanychild()
+    {
+        return $this->hasMany("App\Models\Onetomanies", "master_id");
     }
 
+    function ManytomanyChild()
+    {
+        return $this->belongsToMany(Manytomany::class, 'pivotes', "master_id", "manytomanies_id");
+    }
 }
