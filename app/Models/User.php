@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'age',
-        'contactno'
+        'contactno',
+        "referel_code"
     ];
    
     public $timestamps=false;

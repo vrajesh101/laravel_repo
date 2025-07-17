@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\userinfo;
-use App\Rules\Uppercase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\Validate;
@@ -38,7 +37,7 @@ class UserController extends Controller
     public function addUser(Request $request)
     {
         $request->validate([
-            "name" => ["required", "min:3", "max:30", new Uppercase()],
+            "name" => ["required", "min:3", "max:30"],
             "email" => "required|email",
             "age" => ["required", new Number()],
             "contactno" => "required"

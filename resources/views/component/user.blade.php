@@ -123,6 +123,7 @@
       <th>Email</th>
       <th>age</th>
       <th>Contact No</th>
+      <th>Referel Code</th>
       <th>Action</th>
     </tr>
   </thead>
@@ -182,6 +183,10 @@
           render: function(contactno, obj1, obj2) {
             return contactno;
           }
+        },
+        {
+           data:"referel_code",
+           name:"referel_code",
         },
         {
           data: null,

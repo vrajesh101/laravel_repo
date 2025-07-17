@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
             MastersSeeder::class,
             ManytomanySeeder::class,
             OnetomaniesSeeder::class,
-            PivoteSeeder::class
+            PivoteSeeder::class,
+            UserSeeder::class
         ]);
     }
 }
