@@ -8,5 +8,6 @@
         <a href="{{route('5',['usertype'=>'admin'])}}" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Page 5</span></a>
         <a href="{{URL::to('addstudent?usertype=admin')}}" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Add Student</span></a>
         <a href="{{URL::to('/relationship?usertype=admin')}}" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Relationship</span></a>
+        <a href="{{URL::to('/mail?usertype=admin')}}" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar" style="background-color:rgb(42, 47, 61)"> <span class="text-secondary">Mail</span></a>
     </div>
 </div>

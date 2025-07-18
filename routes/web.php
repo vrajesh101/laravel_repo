@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\RelationshipsController;
 use App\Http\Controllers\studentController;
 use App\Http\Controllers\UserController;
@@ -17,6 +18,8 @@ Route::view("/page4", "component.page4")->name("4");
 Route::view("/page5", "component.page5")->name("5");
 Route::view("/addstudent", "component.student");
 Route::view("/relationship", "component.relationship");
+Route::view("/mail", "component.mail");
+
 
 
 
@@ -37,3 +40,4 @@ Route::get("one-to-many",[RelationshipsController::class,"OnetoMany"]);
 Route::get("many-to-one",[RelationshipsController::class,"Manytoone"]);
 Route::get("many-to-many",[RelationshipsController::class,"ManytoMany"]);
 
+Route::post("send-mail",[MailController::class,"sendMail"]);
